@@ -1,23 +1,72 @@
-<!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
 
     <title>Contacts</title>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
-</head>
-<body>
+    {{! <link rel="stylesheet" href="css/style.css" /> }}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /*global*/ *, ::after, ::before { margin: 0; padding: 0; box-sizing:
+      border-box; font-family: "Oswald", sans-serif; } html, body { height:
+      100%; background-color: #1e1b1b; } button { background-color: #31bd6b;
+      font-size: 3vh; width: 20rem; cursor: pointer; } .container { width: 50%;
+      margin: 10vh auto 0; padding-top: 5vh; height: 80vh; background-color:
+      #d8c774; border: 0.5rem solid black; border-radius: 10%; display: flex;
+      flex-direction: column; justify-content: center; align-items: center; }
+      .contact { height: 20%; background-color: #3a5fbc; border: 0.25rem solid
+      black; margin-bottom: 1rem; display: flex; gap: 10rem; align-items:
+      center; font-size: 28px; font-weight: bold; } .input { font-size: 18px;
+      border-radius: 0.5rem; height: 4vh; background-color: #dca227; color:
+      black; width: 80%; margin-bottom: 1rem; display: flex; flex-direction:
+      column; justify-content: space-around; align-items: center; margin-bottom:
+      5px; } .form { height: 10vh; width: 40%; display: flex; flex-direction:
+      column; justify-content: space-between; align-items: center; } .contacts {
+      width: 80%; margin-bottom: 5vh; display: flex; justify-content: center;
+      align-items: center; } .controls-wrapper { display: flex; height: 100%; }
+      .contacts .list-container { width: 100%; padding: 1rem; height: 32rem;
+      overflow-y: scroll; }
+    </style>
+  </head>
+  <body>
 
-<div class="container">
-        {{{body}}}
-</div>
+    <div class="container">
+      {{{body}}}
+    </div>
+    {{! 
+    <script src="js/script.js"></script> }}
 
-<script src="js/script.js"></script>
-</body>
+    <script>
+      function addContact() { const name =
+      document.getElementsByName('name')[0].value; const phone =
+      document.getElementsByName('phone')[0].value; fetch('/add', { method:
+      'POST', headers: {'Content-Type': 'application/json'}, body:
+      JSON.stringify({name, phone}) }) .then(response => response.json())
+      .then(() => window.location.href = '/'); } async function editContact() {
+      const id = document.querySelector('.form').getAttribute('data-key'); const
+      name = document.querySelector('input[name="name"]').value; const phone =
+      document.querySelector('input[name="phone"]').value; try { await
+      fetch(`/update?id=${id}`, { method: 'POST', headers: {'Content-Type':
+      'application/json'}, body: JSON.stringify({name, phone}) });
+      window.location.href = '/' } catch (e) { console.log(e); } } async
+      function deleteContact() { const id =
+      document.querySelector('.form').getAttribute('data-key'); try { await
+      fetch(`/delete?id=${id}`, { method: 'POST', headers: {'Content-Type':
+      'application/json'} }); window.location.href = '/'; } catch (e) {
+      console.log(e); } } function blockButton(name, phone) { const button =
+      document.getElementById('delete-button'); if
+      (document.getElementsByName('name').value !== name ||
+      document.getElementsByName('phone').value !== phone) {
+      button.setAttribute('disabled', 'true'); } else {
+      button.setAttribute('disabled', 'false'); } }
+
+    </script>
+  </body>
 </html>
